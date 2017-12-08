@@ -1,15 +1,16 @@
 import java.security.MessageDigest;
 import java.text.MessageFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
 public class XyzService {
     public String xyzFn(Target target) {
         try {
-            String string = String.format("%02d", target.getPublishedOn().getDayOfMonth());
+            String string = target.getPublishedOn().format(DateTimeFormatter.ofPattern("d"));
             string += target.getCategoryPrefix();
             string += target.getKind().replace("_", "");
 
-            if (target.getHasPersonal()) {
+            if (target.isPersonal()) {
                 string += MessageFormat.format("_{0}", target.getAge()) != null ? target.getAge() : 0;
             }
 
@@ -26,7 +27,7 @@ public class XyzService {
             String truncatedTitle = target.getTitle().toLowerCase().replaceAll("[^A-Za-z]+", "");
             int length = truncatedTitle.length();
             int truncateTo = length > 9 ? 9 : length;
-            string += "_" + truncatedTitle.substring(0, truncateTo+1);
+            string += "_" + truncatedTitle.substring(0, truncateTo + 1);
             string += ".jpg";
             return string;
         } catch (Exception e) {
